@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Temple Pillar / Tablet Base -->
+  <rect x="128" y="80" width="256" height="352" rx="24" stroke="currentColor" fill="none" />
+  
+  <!-- Classic Pillar Capital -->
+  <path d="M 100 80 L 412 80 M 128 120 L 384 120 M 100 432 L 412 432 M 128 392 L 384 392" />
+  
+  <!-- Central AI Circuit / Glyph -->
+  <path d="M 256 180 L 256 332 M 190 256 L 322 256" />
+  <circle cx="256" cy="180" r="16" fill="currentColor" />
+  <circle cx="256" cy="332" r="16" fill="currentColor" />
+  <circle cx="190" cy="256" r="16" fill="currentColor" />
+  <circle cx="322" cy="256" r="16" fill="currentColor" />
+  
+  <!-- Circuit Traces -->
+  <path d="M 190 256 L 160 220 M 322 256 L 352 292" />
+</svg>
