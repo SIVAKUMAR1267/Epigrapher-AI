@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Container, Stack, Flex, Grid } from '../shared/layout';
 import { Card, Button, Badge } from '../shared/ui';
 import { useHistoryStore } from '../stores/history';

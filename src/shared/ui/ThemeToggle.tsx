@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { Button } from './Button';
 import { useSettingsStore } from '../../stores/settings';

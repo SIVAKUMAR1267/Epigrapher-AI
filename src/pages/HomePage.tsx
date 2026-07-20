@@ -1,10 +1,9 @@
-import React from 'react';
-import { Container, Stack, Flex } from '../shared/layout';
+
+import { Container, Flex } from '../shared/layout';
 import { Card, Button } from '../shared/ui';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { config } from '../config';
-import toast from 'react-hot-toast';
 
 import { AppPhase, useWorkflowStore } from '../stores/workflow';
 import { useAnalysisStore } from '../stores/analysis';

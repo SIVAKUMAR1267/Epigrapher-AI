@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Container, Stack, Flex } from '../shared/layout';
 import { Card } from '../shared/ui';
 import { BrainCircuit } from 'lucide-react';

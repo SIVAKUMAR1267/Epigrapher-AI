@@ -1,6 +1,6 @@
-import React from 'react';
+
 import { Container, Stack, Flex, Grid } from '../shared/layout';
-import { Card, Button } from '../shared/ui';
+import { Card } from '../shared/ui';
 import { BookOpen, Camera, Globe, Search, BookMarked, HelpCircle } from 'lucide-react';
 
 export default function DocsPage() {

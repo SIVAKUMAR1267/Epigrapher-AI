@@ -1,6 +1,6 @@
-import React from 'react';
-import { Container, Stack, Flex } from '../shared/layout';
-import { Card, Button } from '../shared/ui';
+
+import { Container, Flex } from '../shared/layout';
+import { Button } from '../shared/ui';
 import { useNavigate } from 'react-router-dom';
 
 export default function NotFoundPage() {

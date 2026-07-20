@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Container, Stack } from '../shared/layout';
 import { Card } from '../shared/ui';
 

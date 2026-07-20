@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Container, Stack, Grid, Flex } from '../shared/layout';
 import { Card } from '../shared/ui';
 import { Keyboard, LifeBuoy, FileQuestion } from 'lucide-react';

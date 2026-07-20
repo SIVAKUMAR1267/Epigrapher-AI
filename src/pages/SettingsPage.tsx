@@ -1,8 +1,7 @@
-import React from 'react';
 import { Container, Stack, Flex, Grid } from '../shared/layout';
 import { Card, Select, Button } from '../shared/ui';
 import { useSettingsStore } from '../stores/settings';
-import { Palette, Globe, HardDrive, DownloadCloud } from 'lucide-react';
+import { Palette, Globe, HardDrive } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
