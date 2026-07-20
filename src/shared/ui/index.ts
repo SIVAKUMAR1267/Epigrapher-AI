@@ -9,5 +9,6 @@ export * from './Input';
 export * from './Select';
 export * from './OcrEditor';
 export * from './ProgressStepper';
-export * from './ImageViewer';
+export { ImageViewer } from './ImageViewer';
+export { BackendLoadingScreen } from './BackendLoadingScreen';
 export * from './Textarea';

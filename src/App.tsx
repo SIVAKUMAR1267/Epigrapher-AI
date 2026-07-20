@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { Layout } from './shared/layout/Layout';
 import { useSettingsStore } from './stores/settings';
 import { useKeyboardShortcuts } from './shared/hooks/useKeyboardShortcuts';
+import { useBackendHealth } from './shared/hooks/useBackendHealth';
+import { BackendLoadingScreen } from './shared/ui';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -67,29 +69,54 @@ function ThemeManager() {
 }
 
 export default function App() {
+  const { status, showLoadingScreen, progress, retry } = useBackendHealth();
   useKeyboardShortcuts();
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <ThemeManager />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<HomePage />} />
-              <Route path="history" element={<HistoryPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="docs" element={<DocsPage />} />
-              <Route path="help" element={<HelpPage />} />
-              <Route path="privacy" element={<PrivacyPage />} />
-              <Route path="terms" element={<TermsPage />} />
-              <Route path="about" element={<AboutPage />} />
-              <Route path="ai-disclaimer" element={<AIDisclaimerPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-        <Toaster position="bottom-center" />
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          backgroundColor: 'var(--color-bg-base)',
+          opacity: showLoadingScreen ? 1 : 0,
+          pointerEvents: showLoadingScreen ? 'all' : 'none',
+          transition: 'opacity 300ms ease-in-out',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          {status !== 'ready' && (
+             <BackendLoadingScreen status={status} progress={progress} onRetry={retry} />
+          )}
+        </div>
+
+        <div style={{
+          opacity: status === 'ready' ? 1 : 0,
+          transition: 'opacity 300ms ease-in-out',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <ThemeManager />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+                <Route path="history" element={<HistoryPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="docs" element={<DocsPage />} />
+                <Route path="help" element={<HelpPage />} />
+                <Route path="privacy" element={<PrivacyPage />} />
+                <Route path="terms" element={<TermsPage />} />
+                <Route path="about" element={<AboutPage />} />
+                <Route path="ai-disclaimer" element={<AIDisclaimerPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+          <Toaster position="bottom-center" />
+        </div>
       </QueryClientProvider>
     </ErrorBoundary>
   );

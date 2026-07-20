@@ -97,7 +97,12 @@ declare global {
 }
 
 // 6. Health & Readiness Endpoints
-app.get('/health', (req, res) => res.status(200).json({ status: 'ok', uptime: process.uptime() }));
+app.get('/health', (req, res) => res.status(200).json({ 
+  status: 'ok', 
+  environment: config.NODE_ENV,
+  version: '1.0.0',
+  uptime: process.uptime() 
+}));
 app.get('/ready', (req, res) => res.status(200).json({ status: 'ready' }));
 app.get('/version', (req, res) => res.status(200).json({ version: '1.0.0' }));
 
