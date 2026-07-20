@@ -17,17 +17,19 @@ const port = config.PORT;
 // 1. HTTP Headers
 app.use(helmet());
 
+// 1.5. Debug Incoming Requests (Before CORS)
+app.use((req, res, next) => {
+  if (req.method !== 'OPTIONS' || req.path !== '/health') {
+    console.log(`[Request] ${req.method} ${req.originalUrl} | Origin: ${req.headers.origin}`);
+  }
+  next();
+});
+
 // 2. CORS Allowlist
 const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim().replace(/\/$/, ''));
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`[CORS Blocked] Origin: "${origin}" not in allowed origins:`, allowedOrigins);
-      callback(null, false);
-    }
-  }
+  origin: allowedOrigins,
+  credentials: true
 }));
 
 // 3. Request Size Limits & Malformed JSON Protection
@@ -636,11 +638,12 @@ app.get('/api/model-status', (_req, res) => {
 });
 
 discoverModels().then(() => {
-  const server = app.listen(port, () => {
+  const server = app.listen(port, '0.0.0.0', () => {
     console.log(JSON.stringify({ 
       timestamp: new Date().toISOString(), 
       event: 'server_started', 
       port, 
+      host: '0.0.0.0',
       models: MODEL_PRIORITY.length 
     }));
   });
