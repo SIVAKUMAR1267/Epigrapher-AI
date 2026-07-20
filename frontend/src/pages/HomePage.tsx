@@ -98,15 +98,32 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: analysis.transcriptionText,
-          language: analysis.detectedLanguage.toLowerCase().includes('greek') ? 'greek' : 'latin',
-          tasks: ['translate'],
-          targetLanguage: settings.defaultTargetLanguage
+          targetLanguage: settings.defaultTargetLanguage,
+          transliterationFormat: 'IAST',
+          displayMode: 'english'
         })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Translation failed.');
       if (data.error) throw new Error(data.error);
-      return data.translation;
+      // Map the backend's flat response into the shape the UI expects
+      return {
+        text: data.translation || 'No translation available.',
+        notes: [
+          data.historical_analysis,
+          data.historical_context,
+          data.archaeological_notes,
+          data.alternative_interpretations
+        ].filter(Boolean).join('\n\n') || undefined,
+        scriptDetected: data.script_detected,
+        ancientLanguage: data.ancient_language,
+        estimatedPeriod: data.estimated_period,
+        dynasty: data.dynasty,
+        region: data.region,
+        transliteration: data.transliteration,
+        confidence: data.confidence,
+        model: data._model,
+      };
     },
     onSuccess: (translationResult) => {
       analysis.setTranslationResult(translationResult);
