@@ -46,6 +46,9 @@ app.use(express.json({
 }));
 
 // 4. Rate Limiting
+// Trust the first proxy (Render, Vercel, Heroku, etc.) to correctly parse X-Forwarded-For
+app.set('trust proxy', 1);
+
 const globalLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 200, // limit each IP to 200 requests per windowMs
