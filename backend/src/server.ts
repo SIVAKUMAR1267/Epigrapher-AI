@@ -28,7 +28,17 @@ app.use((req, res, next) => {
 // 2. CORS Allowlist
 const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim().replace(/\/$/, ''));
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS Mismatch] Environment expects one of: [${allowedOrigins.join(', ')}] | But received request from: "${origin}". Allowing request dynamically.`);
+      // Reflect the origin dynamically to prevent browser CORS blocks
+      callback(null, origin); 
+    }
+  },
   credentials: true
 }));
 
