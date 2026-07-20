@@ -1,31 +1,84 @@
 # React + TypeScript + Vite
 
-## Environment Setup
+## 🚀 Local Development
 
-The application uses environment variables for secure configuration. Follow these steps to set up your local environment:
+The project is structured as a monorepo containing two fully isolated applications. You can run them both easily using root scripts, or run them entirely separately.
 
-1. Copy the example configuration file:
+### Prerequisites
+- **Node.js** (v18+)
+- **NPM** (v9+)
+- **Gemini API Key** (Get one from [Google AI Studio](https://aistudio.google.com/))
+
+---
+
+### Method 1: Running the Full Stack (Convenience)
+
+From the root directory:
+```bash
+# 1. Start the backend in one terminal
+npm run backend
+
+# 2. Start the frontend in another terminal
+npm run frontend
+```
+
+---
+
+### Method 2: Running Independently (For deployment prep)
+
+#### Backend Setup
+
+1. Navigate to the backend directory:
    ```bash
-   cp .env.example .env
+   cd backend
    ```
-
-2. Open `.env` and fill in the required variables:
-   - `GEMINI_API_KEY`: Your Gemini API Key from Google AI Studio. This is required for AI transcription and analysis.
-   - `PORT`: (Optional) The backend server port (defaults to 3001).
-   - `VITE_API_URL`: (Optional) The frontend API base URL (defaults to http://localhost:3001).
-
-3. Start the application:
+2. Install dependencies:
    ```bash
    npm install
+   ```
+3. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your GEMINI_API_KEY
+   ```
+4. Start the server:
+   ```bash
    npm run dev
    ```
 
-## Getting Started
+#### Frontend Setup
 
-1. Clone the repository
-2. Run `npm install`
-3. Configure your `.env` file as shown above
-4. Run `npm run start` to start both the Vite frontend and Express backend concurrently.
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   # Set VITE_API_URL=http://localhost:3000 if running locally
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 📦 Deployment
+
+Because the `frontend` and `backend` are isolated projects with their own `package.json`, they can be easily deployed to independent hosting providers.
+
+* **Frontend**: Deploy the `frontend/` directory to Vercel, Netlify, or Cloudflare Pages.
+  * Build command: `npm run build`
+  * Output directory: `dist`
+  * Environment Variables: Configure `VITE_API_URL` to point to your deployed backend.
+
+* **Backend**: Deploy the `backend/` directory to Render, Railway, or Heroku.
+  * Build command: `npm run build`
+  * Start command: `npm start`
+  * Environment Variables: Configure `GEMINI_API_KEY`, `CORS_ORIGIN` (pointing to your deployed frontend), and set `NODE_ENV=production`.
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
