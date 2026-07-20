@@ -18,7 +18,7 @@ const port = config.PORT;
 app.use(helmet());
 
 // 2. CORS Allowlist
-const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim());
+const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim().replace(/\/$/, ''));
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
