@@ -14,8 +14,11 @@ const port = config.PORT;
 // PHASE 1: SECURITY & HARDENING
 // ============================================================
 
-// 1. HTTP Headers
-app.use(helmet());
+// 1. HTTP Headers — configured to not conflict with CORS on cross-origin API calls
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "unsafe-none" },
+}));
 
 // 2. CORS — simple allowlist from CORS_ORIGIN env var (comma-separated)
 const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim());
