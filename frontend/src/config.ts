@@ -11,7 +11,7 @@ const configSchema = z.object({
   VITE_SUPPORT_EMAIL: z.string().email().optional(),
 });
 
-const emptyToUndefined = (val: string | undefined) => (val === '' ? undefined : val);
+const emptyToUndefined = (val: string | undefined) => (!val || val.trim() === '' ? undefined : val.trim());
 
 // Parse and validate import.meta.env
 const _config = configSchema.safeParse({
