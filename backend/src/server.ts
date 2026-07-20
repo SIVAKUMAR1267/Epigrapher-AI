@@ -17,28 +17,10 @@ const port = config.PORT;
 // 1. HTTP Headers
 app.use(helmet());
 
-// 1.5. Debug Incoming Requests (Before CORS)
-app.use((req, res, next) => {
-  if (req.method !== 'OPTIONS' || req.path !== '/health') {
-    console.log(`[Request] ${req.method} ${req.originalUrl} | Origin: ${req.headers.origin}`);
-  }
-  next();
-});
-
-// 2. CORS Allowlist
-const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim().replace(/\/$/, ''));
+// 2. CORS — simple allowlist from CORS_ORIGIN env var (comma-separated)
+const allowedOrigins = config.CORS_ORIGIN.split(',').map((s: string) => s.trim());
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`[CORS Mismatch] Environment expects one of: [${allowedOrigins.join(', ')}] | But received request from: "${origin}". Allowing request dynamically.`);
-      // Reflect the origin dynamically to prevent browser CORS blocks
-      callback(null, origin); 
-    }
-  },
+  origin: allowedOrigins,
   credentials: true
 }));
 
