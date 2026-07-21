@@ -107,9 +107,9 @@ export const ReviewPhase: React.FC<ReviewPhaseProps> = ({ onTranslate, onReset }
                   value={settings.analysisDisplayMode}
                   onChange={(value: string) => settings.setAnalysisDisplayMode(value as any)}
                   options={[
-                    { label: 'Target Language', value: 'target_only' },
+                    { label: 'Target Language', value: 'target' },
                     { label: 'Bilingual (Target + English)', value: 'bilingual' },
-                    { label: 'English Only', value: 'english_only' },
+                    { label: 'English Only', value: 'english' },
                     { label: 'Research (Raw)', value: 'research' }
                   ]}
                 />
