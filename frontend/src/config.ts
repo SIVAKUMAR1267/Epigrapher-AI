@@ -2,7 +2,10 @@ import { z } from 'zod';
 
 // Define the configuration schema for the frontend with strict validation
 const configSchema = z.object({
-  VITE_API_URL: z.string().url().default('http://localhost:3001'),
+  // In production, VITE_API_URL should be empty ('') so requests go through
+  // Vercel's proxy rewrites (same-origin, no CORS needed).
+  // In development, set to 'http://localhost:3000' to hit the local backend.
+  VITE_API_URL: z.string().default(''),
   VITE_APP_NAME: z.string().default('Epigrapher AI'),
   VITE_ENABLE_DEBUG: z.coerce.boolean().default(false),
   VITE_ENABLE_ANALYTICS: z.coerce.boolean().default(false),

@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://epigrapher-ai.onrender.com/api/:path*" },
+    { "source": "/health", "destination": "https://epigrapher-ai.onrender.com/health" },
+    { "source": "/ready", "destination": "https://epigrapher-ai.onrender.com/ready" }
+  ]
+}
