@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, Settings, BrainCircuit, History } from 'lucide-react';
+import { HelpCircle, Settings, History } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { Flex } from './Flex';
@@ -21,10 +21,10 @@ export const Header: React.FC = () => {
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Flex align="center" gap={3}>
               <div style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center' }}>
-                <BrainCircuit size={24} />
+                <img src="/favicon.svg" alt="Epigrapher AI Logo" style={{ width: '28px', height: '28px' }} />
               </div>
               <div>
-                <h1 style={{ fontSize: '1.125rem', fontWeight: 600, margin: 0, letterSpacing: '-0.01em', lineHeight: 1 }}>
+                <h1 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
                   Epigrapher AI
                 </h1>
               </div>

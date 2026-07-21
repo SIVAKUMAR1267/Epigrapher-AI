@@ -23,12 +23,6 @@ export const ReviewPhase: React.FC<ReviewPhaseProps> = ({ onTranslate, onReset }
             <RotateCcw size={16} style={{ marginRight: '0.5rem' }} /> Start Over
           </Button>
         </Flex>
-        
-        {analysis.imagePreview && (
-          <div style={{ textAlign: 'center', background: 'var(--color-bg-base)', padding: '0.5rem', borderRadius: 'var(--radius-md)' }}>
-            <img src={analysis.imagePreview} alt="Preview" style={{ maxHeight: '120px', borderRadius: '4px' }} />
-          </div>
-        )}
 
         <Flex gap={3} wrap="wrap">
           <Badge variant="default">
@@ -43,45 +37,90 @@ export const ReviewPhase: React.FC<ReviewPhaseProps> = ({ onTranslate, onReset }
           ))}
         </Flex>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Extracted Text (Editable)</label>
-          <Textarea 
-            value={analysis.transcriptionText}
-            onChange={(e) => analysis.setTranscriptionText(e.target.value)}
-            style={{ minHeight: '150px' }}
-          />
-        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
+          {/* Left Column: Image Preview */}
+          {analysis.imagePreview && (
+            <div style={{ flex: '1 1 300px', minWidth: '300px', display: 'flex', flexDirection: 'column' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Original Image</label>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-base)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
+                <img src={analysis.imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '400px', objectFit: 'contain', borderRadius: '4px' }} />
+              </div>
+            </div>
+          )}
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Target Language</label>
-          <Select 
-            value={settings.defaultTargetLanguage}
-            onChange={(value: string) => settings.setDefaultTargetLanguage(value as any)}
-            options={[
-              { label: 'English', value: 'en' },
-              { label: 'Spanish', value: 'es' },
-              { label: 'French', value: 'fr' },
-              { label: 'German', value: 'de' },
-              { label: 'Modern Greek', value: 'el' },
-              {
-                label: 'Indian Languages',
-                options: [
-                  { label: 'Hindi', value: 'hi' },
-                  { label: 'Bengali', value: 'bn' },
-                  { label: 'Telugu', value: 'te' },
-                  { label: 'Marathi', value: 'mr' },
-                  { label: 'Tamil', value: 'ta' },
-                  { label: 'Urdu', value: 'ur' },
-                  { label: 'Sanskrit', value: 'sa' },
-                ]
-              }
-            ]}
-          />
-        </div>
+          {/* Right Column: Editor */}
+          <div style={{ flex: '2 1 400px', minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Extracted Text (Editable)</label>
+              <Textarea 
+                value={analysis.transcriptionText}
+                onChange={(e) => analysis.setTranscriptionText(e.target.value)}
+                style={{ minHeight: '200px', width: '100%', fontFamily: 'var(--font-mono)' }}
+              />
+            </div>
+            
+            <Flex gap={4} wrap="wrap">
+              <div style={{ flex: '1 1 200px' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Target Language</label>
+                <Select 
+                  value={settings.defaultTargetLanguage}
+                  onChange={(value: string) => settings.setDefaultTargetLanguage(value as any)}
+                  options={[
+                    {
+                      label: 'Indian Languages',
+                      options: [
+                        { label: 'Tamil', value: 'ta' },
+                        { label: 'Telugu', value: 'te' },
+                        { label: 'Kannada', value: 'kn' },
+                        { label: 'Malayalam', value: 'ml' },
+                        { label: 'Hindi', value: 'hi' },
+                        { label: 'Marathi', value: 'mr' },
+                        { label: 'Gujarati', value: 'gu' },
+                        { label: 'Punjabi', value: 'pa' },
+                        { label: 'Odia', value: 'or' },
+                        { label: 'Bengali', value: 'bn' },
+                        { label: 'Sanskrit', value: 'sa' },
+                        { label: 'Urdu', value: 'ur' },
+                      ]
+                    },
+                    {
+                      label: 'International',
+                      options: [
+                        { label: 'English', value: 'en' },
+                        { label: 'French', value: 'fr' },
+                        { label: 'German', value: 'de' },
+                        { label: 'Spanish', value: 'es' },
+                        { label: 'Italian', value: 'it' },
+                        { label: 'Modern Greek', value: 'el' },
+                        { label: 'Japanese', value: 'ja' },
+                        { label: 'Chinese', value: 'zh' },
+                        { label: 'Arabic', value: 'ar' },
+                      ]
+                    }
+                  ]}
+                />
+              </div>
 
-        <Button onClick={onTranslate} size="lg" style={{ width: '100%' }}>
-          <FileText size={20} style={{ marginRight: '0.5rem' }} /> Translate Document
-        </Button>
+              <div style={{ flex: '1 1 200px' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Display Mode</label>
+                <Select 
+                  value={settings.analysisDisplayMode}
+                  onChange={(value: string) => settings.setAnalysisDisplayMode(value as any)}
+                  options={[
+                    { label: 'Target Language', value: 'target_only' },
+                    { label: 'Bilingual (Target + English)', value: 'bilingual' },
+                    { label: 'English Only', value: 'english_only' },
+                    { label: 'Research (Raw)', value: 'research' }
+                  ]}
+                />
+              </div>
+            </Flex>
+
+            <Button onClick={onTranslate} size="lg" style={{ width: '100%', marginTop: 'auto' }}>
+              <FileText size={20} style={{ marginRight: '0.5rem' }} /> Translate Document
+            </Button>
+          </div>
+        </div>
       </Stack>
     </Card>
   );

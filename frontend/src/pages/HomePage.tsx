@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { Container, Flex } from '../shared/layout';
 import { Card, Button } from '../shared/ui';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
@@ -90,12 +90,16 @@ export default function HomePage() {
   const settings = useSettingsStore();
   const history = useHistoryStore();
 
+  const abortControllerRef = React.useRef<AbortController | null>(null);
+
   const ocrMutation = useMutation({
     mutationFn: async (base64Image: string) => {
+      abortControllerRef.current = new AbortController();
       const res = await fetch(`${config.VITE_API_URL}/api/transcribe-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: base64Image, language: 'auto' })
+        body: JSON.stringify({ image: base64Image, language: 'auto' }),
+        signal: abortControllerRef.current.signal
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to extract text from image.');
@@ -114,12 +118,15 @@ export default function HomePage() {
       workflow.setPhase(AppPhase.Review);
     },
     onError: (error: Error) => {
+      if (error.name === 'AbortError') return;
       workflow.setErrorMessage(error.message || 'An unexpected error occurred during OCR.');
+      workflow.setPhase(AppPhase.Error);
     }
   });
 
   const translateMutation = useMutation({
     mutationFn: async () => {
+      abortControllerRef.current = new AbortController();
       const res = await fetch(`${config.VITE_API_URL}/api/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -127,30 +134,15 @@ export default function HomePage() {
           text: analysis.transcriptionText,
           targetLanguage: getLanguageName(settings.defaultTargetLanguage),
           transliterationFormat: 'IAST',
-          displayMode: 'english'
-        })
+          displayMode: settings.analysisDisplayMode
+        }),
+        signal: abortControllerRef.current.signal
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Translation failed.');
       if (data.error) throw new Error(data.error);
-      // Map the backend's flat response into the shape the UI expects
-      return {
-        text: data.translation || 'No translation available.',
-        notes: [
-          data.historical_analysis,
-          data.historical_context,
-          data.archaeological_notes,
-          data.alternative_interpretations
-        ].filter(Boolean).join('\n\n') || undefined,
-        scriptDetected: data.script_detected,
-        ancientLanguage: data.ancient_language,
-        estimatedPeriod: data.estimated_period,
-        dynasty: data.dynasty,
-        region: data.region,
-        transliteration: data.transliteration,
-        confidence: data.confidence,
-        model: data._model,
-      };
+      // Return the full backend response directly
+      return data;
     },
     onSuccess: (translationResult) => {
       analysis.setTranslationResult(translationResult);
@@ -164,22 +156,44 @@ export default function HomePage() {
           confidence: analysis.confidence,
           targetLanguage: settings.defaultTargetLanguage,
           transcription: analysis.transcriptionText,
-          translation: translationResult.text,
-          notes: translationResult.notes
+          translation: translationResult.translation,
+          notes: translationResult.historical_analysis || ''
         });
       }
     },
     onError: (error: Error) => {
+      if (error.name === 'AbortError') return;
       workflow.setErrorMessage(error.message || 'An unexpected error occurred during translation.');
+      workflow.setPhase(AppPhase.Error);
     }
   });
 
-  const handleImageSelected = async (file: File) => {
+  const handleCancelProcessing = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    workflow.setPhase(workflow.phase === AppPhase.ProcessingOCR ? AppPhase.Upload : AppPhase.Review);
+  };
+
+  const handleImageSelected = async (file: File | null, manualText?: string) => {
     try {
-      workflow.setPhase(AppPhase.ProcessingOCR);
-      const base64Image = await optimizeImage(file);
-      analysis.setImagePreview(base64Image);
-      ocrMutation.mutate(base64Image);
+      if (manualText !== undefined && !file) {
+        analysis.setOCRData({
+          text: manualText,
+          language: 'Unknown',
+          confidence: 1.0,
+          warnings: []
+        });
+        analysis.setImagePreview('');
+        workflow.setPhase(AppPhase.Review);
+        return;
+      }
+      if (file) {
+        workflow.setPhase(AppPhase.ProcessingOCR);
+        const base64Image = await optimizeImage(file);
+        analysis.setImagePreview(base64Image);
+        ocrMutation.mutate(base64Image);
+      }
     } catch (err: any) {
       workflow.setErrorMessage(err.message || 'Failed to process image locally.');
     }
@@ -202,7 +216,8 @@ export default function HomePage() {
       {workflow.phase === AppPhase.ProcessingOCR && (
         <ProcessingPhase 
           title="Extracting ancient text..." 
-          subtitle="Detecting scripts, normalizing noise, and preserving gaps." 
+          subtitle="Detecting scripts, normalizing noise, and preserving gaps."
+          onCancel={handleCancelProcessing}
         />
       )}
 
@@ -220,6 +235,7 @@ export default function HomePage() {
         <ProcessingPhase 
           title={`Translating to ${getLanguageName(settings.defaultTargetLanguage)}...`} 
           subtitle="Preserving historical context and cultural nuances." 
+          onCancel={handleCancelProcessing}
         />
       )}
 

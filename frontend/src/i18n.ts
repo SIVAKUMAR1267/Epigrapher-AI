@@ -14,7 +14,11 @@ export type TranslationKeys =
   | 'dynasty'
   | 'confidence'
   | 'copy'
+  | 'copy_translation'
+  | 'copy_full_analysis'
   | 'download'
+  | 'download_txt'
+  | 'download_pdf'
   | 'share'
   | 'new_analysis'
   | 'references'
@@ -42,7 +46,11 @@ const en: TranslationDictionary = {
   dynasty: "Dynasty",
   confidence: "Confidence",
   copy: "Copy Text",
-  download: "Download PDF",
+  copy_translation: "Copy Translation Only",
+  copy_full_analysis: "Copy Full Analysis",
+  download: "Download",
+  download_txt: "Download TXT",
+  download_pdf: "Download PDF",
   share: "Share",
   new_analysis: "New Analysis",
   references: "References",
