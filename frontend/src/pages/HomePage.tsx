@@ -10,6 +10,33 @@ import { useAnalysisStore } from '../stores/analysis';
 import { useSettingsStore } from '../stores/settings';
 import { useHistoryStore } from '../stores/history';
 
+// Map language codes to full names for the backend AI prompts
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English',
+  fr: 'French',
+  de: 'German',
+  es: 'Spanish',
+  it: 'Italian',
+  gr: 'Greek',
+  he: 'Hebrew',
+  ar: 'Arabic',
+  ta: 'Tamil',
+  hi: 'Hindi',
+  kn: 'Kannada',
+  te: 'Telugu',
+  ml: 'Malayalam',
+  mr: 'Marathi',
+  bn: 'Bengali',
+  gu: 'Gujarati',
+  or: 'Odia',
+  pa: 'Punjabi',
+  sa: 'Sanskrit',
+};
+
+function getLanguageName(code: string): string {
+  return LANGUAGE_NAMES[code] || code;
+}
+
 import { UploadPhase } from '../features/upload/UploadPhase';
 import { ProcessingPhase } from '../features/shared/ProcessingPhase';
 import { ReviewPhase } from '../features/ocr/ReviewPhase';
@@ -98,7 +125,7 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: analysis.transcriptionText,
-          targetLanguage: settings.defaultTargetLanguage,
+          targetLanguage: getLanguageName(settings.defaultTargetLanguage),
           transliterationFormat: 'IAST',
           displayMode: 'english'
         })
@@ -191,7 +218,7 @@ export default function HomePage() {
 
       {workflow.phase === AppPhase.ProcessingTranslation && (
         <ProcessingPhase 
-          title={`Translating to ${settings.defaultTargetLanguage}...`} 
+          title={`Translating to ${getLanguageName(settings.defaultTargetLanguage)}...`} 
           subtitle="Preserving historical context and cultural nuances." 
         />
       )}

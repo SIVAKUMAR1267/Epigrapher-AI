@@ -6,6 +6,13 @@ import { useAnalysisStore } from '../../stores/analysis';
 import { useSettingsStore } from '../../stores/settings';
 import toast from 'react-hot-toast';
 
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English', fr: 'French', de: 'German', es: 'Spanish', it: 'Italian',
+  gr: 'Greek', he: 'Hebrew', ar: 'Arabic', ta: 'Tamil', hi: 'Hindi',
+  kn: 'Kannada', te: 'Telugu', ml: 'Malayalam', mr: 'Marathi', bn: 'Bengali',
+  gu: 'Gujarati', or: 'Odia', pa: 'Punjabi', sa: 'Sanskrit',
+};
+
 interface ResultsPhaseProps {
   onReset: () => void;
 }
@@ -46,7 +53,7 @@ export const ResultsPhase: React.FC<ResultsPhaseProps> = ({ onReset }) => {
 
         <Flex gap={3}>
           <Badge variant="outline">Source: {analysis.detectedLanguage}</Badge>
-          <Badge variant="outline">Target: {settings.defaultTargetLanguage}</Badge>
+          <Badge variant="outline">Target: {LANGUAGE_NAMES[settings.defaultTargetLanguage] || settings.defaultTargetLanguage}</Badge>
         </Flex>
 
         <div style={{ 
