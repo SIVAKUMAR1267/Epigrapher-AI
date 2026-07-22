@@ -139,6 +139,7 @@ async function discoverModels() {
 
     // Ideal priority order
     const idealOrder = [
+      'gemini-3.6-flash',
       'gemini-3.5-flash',
       'gemini-3.5-pro',
       'gemini-3.1-flash',
@@ -149,9 +150,13 @@ async function discoverModels() {
       'gemini-2.5-flash',
       'gemini-2.5-flash-lite',
       'gemini-2.5-pro',
+      'gemini-2.5-flash-thinking',
+      'gemini-2.0-pro-exp-02-05',
+      'gemini-2.0-flash-thinking-exp-01-21',
       'gemini-2.0-flash',
       'gemini-2.0-flash-lite',
       'gemini-1.5-flash',
+      'gemini-1.5-flash-8b',
       'gemini-1.5-pro'
     ];
 
@@ -166,10 +171,13 @@ async function discoverModels() {
     console.log(`[Discovery] Dynamically loaded ${MODEL_PRIORITY.length} models.`);
   } catch (e) {
     MODEL_PRIORITY = [
+      'gemini-3.6-flash',
       'gemini-3.5-flash',
       'gemini-2.5-flash',
       'gemini-2.5-flash-lite',
       'gemini-2.5-pro',
+      'gemini-2.5-flash-thinking',
+      'gemini-2.0-pro-exp-02-05',
       'gemini-2.0-flash',
       'gemini-2.0-flash-lite'
     ];
